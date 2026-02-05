@@ -7,26 +7,28 @@ Robot::Robot() {
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(1, Config::MAP_SIZE-2);
+    
+    // for random start
+    std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
 
-    srand(time(0));
-
+    // for random genes, 0-2 for wall, empty, battery
+    std::uniform_int_distribution<int> geneDist(0, 2);
+    // 0-4 for n, e, s, w, random
+    std::uniform_int_distribution<int> moveDist(0, 4);
 
     // random start
-    this->coords[0] = dis(gen);
-    this->coords[1] = dis(gen);
+    coords[0] = startDist(gen);
+    coords[1] = startDist(gen);
 
     for (int i = 0; i < geneCount; i++) {
         for (int j = 0; j < valsPerGene; j++) {
-            // mod 4 for every possible "thing" in adjacent squres; empty, battery, wall, predator
-            // mod 3 for now bc fuck predators for now
-            int r = rand() % 3;
+            int r = geneDist(gen);
             genes[i][j] = r;
         }
         /* mod 5 for all movement directions; n, e, s, w, random
         consider adding 8 directional movement?
         maybe 6 directional and make the map 3d? */
-        int r = rand() % 5;
+        int r = moveDist(gen);
         movementGene[i] = r;
     }
 }
