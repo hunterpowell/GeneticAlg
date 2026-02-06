@@ -7,8 +7,7 @@ class Config {
         static constexpr int BATTERY = 1;
         static constexpr int WALL = 2;
         // static constexpr int PREDATOR = 3;
-        static constexpr int THE_GUY = 9;
-
+        static constexpr int THE_GUY = 7;
 
         // map size
         static constexpr int MAP_SIZE = 12;

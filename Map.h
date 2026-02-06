@@ -18,12 +18,6 @@ public:
     int checkCell(int row, int col) {
         return grid[row][col];
     }
-    void eatBattery(int row, int col) {
-        grid[row][col] = Config::EMPTY;
-    }
-    bool checkOOB(int row, int col) {
-        return grid[row][col] == Config::WALL;
-    }
     void display() {
         for (int i = 0; i < Config::MAP_SIZE; i++) {
             for (int j = 0; j < Config::MAP_SIZE; j++) {

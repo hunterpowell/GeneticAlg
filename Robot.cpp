@@ -3,17 +3,14 @@
 #include "Robot.h"
 
 Robot::Robot() : gen(std::random_device{}()) {
-
-    // std::random_device rd;
-    // std::mt19937 gen(rd());
     
     // for random start
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
 
-    // for random genes, 0-2 for wall, empty, battery
-    std::uniform_int_distribution<int> geneDist(0, 2);
-    // 0-4 for n, e, s, w, random
-    std::uniform_int_distribution<int> moveDist(0, 4);
+    // for random genes, 0-3 for wall, empty, battery, WILDCARD
+    std::uniform_int_distribution<int> geneDist(0, 3);
+    // 0-8 for n, ne, e, se, s, sw, w, nw, random
+    std::uniform_int_distribution<int> moveDist(0, 8);
 
     // random start
     position[0] = startDist(gen);
@@ -24,16 +21,14 @@ Robot::Robot() : gen(std::random_device{}()) {
             int r = geneDist(gen);
             genes[i][j] = r;
         }
-        /* mod 5 for all movement directions; n, e, s, w, random
-        consider adding 8 directional movement?
-        maybe 6 directional and make the map 3d? */
+        // randomizes 0-8 for n, ne, e, se, s, sw, w, nw, random
         int r = moveDist(gen);
         movementGene[i] = r;
     }
 }
 
 void Robot::look(Map m) {
-    // populate surroundings
+    // populate surroundings array
     int dy[] = {-1, -1, 0, 1, 1, 1, 0, -1};
     int dx[] = {0, 1, 1, 1, 0, -1, -1, -1};
     for (int i = 0; i < 8; i++) {
@@ -46,7 +41,8 @@ void Robot::look(Map m) {
 
 bool Robot::geneMatch(int geneIdx) {
     for (int j = 0; j < Config::VALS_PER_GENE; j++) {
-        if (genes[geneIdx][j] != surroundings[j]) {
+        // check match OR wildcard, if neither we return false
+        if (genes[geneIdx][j] != surroundings[j] && genes[geneIdx][j] != 3) {
             return false;
         }
     }
@@ -69,53 +65,42 @@ void Robot::movement(Map& m) {
 }
 
 void Robot::move(Map& m, int mgene) {
-    std::cout << "CALLING MOVE, movement gene = " << mgene << "\n";
-    // 0-4 -> n, e, s, w, random
-    energy -= 1;
-    turnsAlive += 1;
+    // std::cout << "CALLING MOVE, movement gene = " << mgene << "\n";
+    
+    // eat energy and increment turns alive
+    energy--;
+    turnsAlive++;
 
     int dir;
-    int tmp;
-    std::uniform_int_distribution<int> randomDir(0, 3);
-    
-    // double bc surroudings is 8 directions but movement is 4
-    // even nums are cardinal
-    if (mgene != 4) {
-        dir = 2*mgene;
-        tmp = mgene;
-    }
-    // random direction if movementGene is 4
-    else {
-        dir = 2*randomDir(gen);
-        tmp = dir/2;
-    }
+    std::uniform_int_distribution<int> randomDir(0, 7);
+
+    // random dir if movement gene is 8
+    dir = (mgene != 8) ? mgene : randomDir(gen);
 
     // move in a cardinal direction, n e s w respectively
     if (surroundings[dir] != Config::WALL) {
+        
+        // empty current cell as we move
         m.setCell(position[0], position[1], Config::EMPTY);
-        switch (tmp) {
-            case(0):
-                std::cout << "moving n\n";
-                position[0]--;
-                break;
-            case(1):
-                std::cout << "moving e\n";
-                position[1]++;
-                break;
-            case(2):
-                std::cout << "moving s\n";
-                position[0]++;
-                break;
-            case(3):
-                std::cout << "moving w\n";
-                position[1]--;
-                break;
+        
+        // change y and x based on movement gene
+        int dy[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+        int dx[] = {0, 1, 1, 1, 0, -1, -1, -1};
+        position[0] += dy[dir];
+        position[1] += dx[dir];
+        
+        // if battery, add 5 to energy and fitness
+        if (m.checkCell(position[0], position[1]) == Config::BATTERY) {
+            energy += 5;
+            fitness += 5;
         }
+
+        // set current cell to our robot constant
         m.setCell(position[0], position[1], Config::THE_GUY);
     }
     
+    // update surroundings
     look(m);
-    
 }
 
 

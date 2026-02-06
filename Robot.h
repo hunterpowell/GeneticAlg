@@ -4,12 +4,10 @@
 class Robot {
     private:
     std::mt19937 gen;
-        // 0-7 -> n, ne, e, se, s, sw, w, nw
-        int surroundings[8];
-        // 0-1 -> row, col
-        int position[2];
-        int energy;
-        int fitness;
+        int surroundings[8];    // 0-7 -> n, ne, e, se, s, sw, w, nw
+        int position[2];        // 0-1 -> row, col
+        int energy;             // current energy
+        int fitness;            // total energy
         int turnsAlive;
         int geneCount = Config::GENE_COUNT;
         int valsPerGene = Config::VALS_PER_GENE;
@@ -18,13 +16,14 @@ class Robot {
 
         bool geneMatch(int);
         void move(Map&, int);
-        
+
     public:
         Robot();
-        void look(Map);
         
+        void look(Map);
+        void movement(Map&);
         void displayGenes();
-
+        
         int* getSurroundings() {return &surroundings[0];}
         int getEnergy() {return energy;}
         int getFitness() {return fitness;}
@@ -33,6 +32,5 @@ class Robot {
         int getCol() {return position[1];}
         int* getGenes() {return &genes[0][0];}
         int* getMovementGene() {return &movementGene[0];}
-        void movement(Map&);
 
 };
