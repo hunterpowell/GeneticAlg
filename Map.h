@@ -15,7 +15,7 @@ public:
     void setCell(int row, int col, int n) {
         grid[row][col] = n;
     }
-    bool checkCell(int row, int col) {
+    int checkCell(int row, int col) {
         return grid[row][col];
     }
     void eatBattery(int row, int col) {
@@ -32,7 +32,6 @@ public:
             std::cout << "\n";
         }
     }
-
 };
 
 #endif

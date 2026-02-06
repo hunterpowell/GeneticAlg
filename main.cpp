@@ -21,12 +21,20 @@ int main() {
     robert.look(map);
 
     int* tmp = robert.getSurroundings();
-    std::cout << robert.getRow() << std::endl;
-    std::cout << robert.getCol() << std::endl;
 
     for (int i = 0; i < 8; i++) {
         std::cout << tmp[i] << " ";
     }
+    std::cout << std::endl;
+
+    robert.movement(map);
+
+    map.display();
+
+    for (int i = 0; i < 8; i++) {
+            std::cout << tmp[i] << " ";
+    }
+
 
     return 0;
 }

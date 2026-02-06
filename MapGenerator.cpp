@@ -5,8 +5,8 @@
 #include "MapGenerator.h"
 #include "Config.h"
 
-MapGenerator::MapGenerator() : gen(std::random_device{}()) {
-}
+// just initializes the random generator
+MapGenerator::MapGenerator() : gen(std::random_device{}()) {}
 
 void MapGenerator::populateMap(Map& map) {
     int size = Config::MAP_SIZE;
