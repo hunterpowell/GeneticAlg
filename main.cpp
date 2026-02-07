@@ -11,6 +11,7 @@ int main() {
 
     Robot robert; 
     robert.displayGenes();
+    std::cout << std::endl;
     
     MapGenerator generator;
     Map map;
@@ -34,6 +35,7 @@ int main() {
     for (int i = 0; i < 8; i++) {
             std::cout << tmp[i] << " ";
     }
+    std::cout << robert;
 
 
     return 0;

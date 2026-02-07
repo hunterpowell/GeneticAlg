@@ -3,7 +3,7 @@
 
 class Robot {
     private:
-    std::mt19937 gen;
+        std::mt19937 gen;
         int surroundings[8];    // 0-7 -> n, ne, e, se, s, sw, w, nw
         int position[2];        // 0-1 -> row, col
         int energy;             // current energy
@@ -32,5 +32,7 @@ class Robot {
         int getCol() {return position[1];}
         int* getGenes() {return &genes[0][0];}
         int* getMovementGene() {return &movementGene[0];}
+
+        friend std::ostream &operator << (std::ostream &output, const Robot &x);
 
 };

@@ -10,11 +10,11 @@ class Config {
         static constexpr int THE_GUY = 7;
 
         // map size
-        static constexpr int MAP_SIZE = 12;
+        static constexpr int MAP_SIZE = 22;
         static constexpr int TOTAL_CELLS = (MAP_SIZE-2) * (MAP_SIZE-2);     // -2 bc i don't want to turn the walls into batteries
         
         // robot numbers
-        static constexpr int GENE_COUNT = 16;
+        static constexpr int GENE_COUNT = 64;
         static constexpr int VALS_PER_GENE = 8;
 };
 

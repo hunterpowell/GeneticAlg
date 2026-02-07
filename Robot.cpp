@@ -16,6 +16,10 @@ Robot::Robot() : gen(std::random_device{}()) {
     position[0] = startDist(gen);
     position[1] = startDist(gen);
 
+    energy = 5;
+    fitness = 0;
+    turnsAlive = 0;
+
     for (int i = 0; i < geneCount; i++) {
         for (int j = 0; j < valsPerGene; j++) {
             int r = geneDist(gen);
@@ -25,6 +29,15 @@ Robot::Robot() : gen(std::random_device{}()) {
         int r = moveDist(gen);
         movementGene[i] = r;
     }
+}
+
+// let's me cout << robot; and it'll print out the relevant info
+std::ostream &operator << (std::ostream &output, const Robot &x) {
+    std::cout << "\nrow: " << x.position[0] << " col: " << x.position[1] << "\n";
+    std::cout << "energy: " << x.energy << "\n";
+    std::cout << "fitness: " << x.fitness << "\n";
+    std::cout << "turns alive: " << x.turnsAlive << "\n";
+    return output;
 }
 
 void Robot::look(Map m) {
@@ -50,11 +63,12 @@ bool Robot::geneMatch(int geneIdx) {
 }
 
 void Robot::movement(Map& m) {
-    // loop through rows of genes
-    for (int i = 0; i < Config::GENE_COUNT; i++) {
+    // loop through rows of genes, -1 bc we default to final gene
+    for (int i = 0; i < Config::GENE_COUNT-1; i++) {
         if (geneMatch(i)) {
             // move direction of first match
-            std::cout << "MATCH MATCH MATCH\n";
+            std::cout << "MATCH MATCH MATCH @ " << i << std::endl;
+
             move(m, movementGene[i]);
             return;
         }
@@ -65,7 +79,7 @@ void Robot::movement(Map& m) {
 }
 
 void Robot::move(Map& m, int mgene) {
-    // std::cout << "CALLING MOVE, movement gene = " << mgene << "\n";
+    std::cout << "CALLING MOVE, movement gene = " << mgene << "\n";
     
     // eat energy and increment turns alive
     energy--;
@@ -116,6 +130,6 @@ void Robot::displayGenes() {
         for (int j = 0; j < valsPerGene; j++) {
             std::cout << genes[i][j] << " ";
         }
-        std::cout << movementGene[i] << std::endl;
+        std::cout << " m: " << movementGene[i] << std::endl;
     }
 }
