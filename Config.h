@@ -16,6 +16,10 @@ class Config {
         // robot numbers
         static constexpr int GENE_COUNT = 64;
         static constexpr int VALS_PER_GENE = 8;
+
+        // sim numbers
+        static constexpr int GENERATIONS = 100;
+        static constexpr int ROBOTS_PER_GEN = 100;
 };
 
 #endif

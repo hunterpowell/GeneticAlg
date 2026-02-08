@@ -6,36 +6,18 @@
 
 int main() {
 
-    // std::random_device rd;
-    // std::mt19937 gen(rd());
-
     Robot robert; 
-    robert.displayGenes();
-    std::cout << std::endl;
-    
     MapGenerator generator;
-    Map map;
-    generator.populateMap(map);
-    map.setCell(robert.getRow(), robert.getCol(), Config::THE_GUY);
-    map.display();
+    Map m;
+    generator.populateMap(m);
+    m.setCell(robert.getRow(), robert.getCol(), Config::THE_GUY);
 
-    robert.look(map);
-
-    int* tmp = robert.getSurroundings();
-
-    for (int i = 0; i < 8; i++) {
-        std::cout << tmp[i] << " ";
+    m.display();
+    while (robert.getEnergy() > 0) {
+        robert.look(m);
+        robert.movement(m);
     }
-    std::cout << std::endl;
-
-    robert.movement(map);
-
-    map.display();
-
-    for (int i = 0; i < 8; i++) {
-            std::cout << tmp[i] << " ";
-    }
-    std::cout << robert;
+    m.display();
 
 
     return 0;
