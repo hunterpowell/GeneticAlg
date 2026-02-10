@@ -7,7 +7,7 @@ Robot::Robot() : gen(std::random_device{}()) {
     // for random start
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
 
-    // for random genes, 0-3 for wall, empty, battery, WILDCARD
+    // for random genes, 0-3 for wall, empty, battery, wildcard
     std::uniform_int_distribution<int> geneDist(0, 3);
     // 0-8 for n, ne, e, se, s, sw, w, nw, random
     std::uniform_int_distribution<int> moveDist(0, 8);
@@ -63,23 +63,23 @@ bool Robot::geneMatch(int geneIdx) {
 }
 
 void Robot::movement(Map& m) {
+    // update surroundings
+    look(m);
+
     // loop through rows of genes, -1 bc we default to final gene
     for (int i = 0; i < Config::GENE_COUNT-1; i++) {
         if (geneMatch(i)) {
             // move direction of first match
-            std::cout << "MATCH MATCH MATCH @ " << i << std::endl;
 
             move(m, movementGene[i]);
             return;
         }
     }
     // default to final gene if no match
-    std::cout << "NO MATCH NO MATCH NO MATCH\n";
     move(m, movementGene[Config::GENE_COUNT-1]);
 }
 
 void Robot::move(Map& m, int mgene) {
-    std::cout << "CALLING MOVE, movement gene = " << mgene << "\n";
     
     // eat energy and increment turns alive
     energy--;
@@ -112,9 +112,6 @@ void Robot::move(Map& m, int mgene) {
         // set current cell to our robot constant
         m.setCell(position[0], position[1], Config::THE_GUY);
     }
-    
-    // update surroundings
-    look(m);
 }
 
 

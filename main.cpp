@@ -1,24 +1,13 @@
 #include <iostream>
 #include <random>
-#include "Robot.h"
-#include "Map.h"
-#include "MapGenerator.h"
+#include "Simulator.h"
 
 int main() {
 
-    Robot robert; 
-    MapGenerator generator;
-    Map m;
-    generator.populateMap(m);
-    m.setCell(robert.getRow(), robert.getCol(), Config::THE_GUY);
+    Simulator sim;
+    sim.runSim();
 
-    m.display();
-    while (robert.getEnergy() > 0) {
-        robert.look(m);
-        robert.movement(m);
-    }
-    m.display();
-
+    std::cout << sim.getBestBot();
 
     return 0;
 }

@@ -11,5 +11,5 @@ add_executable(runsim
     main.cpp
     MapGenerator.cpp
     Robot.cpp
-    
+    Simulator.cpp
 )
