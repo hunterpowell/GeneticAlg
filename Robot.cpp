@@ -1,8 +1,9 @@
 #include <iostream>
 #include <random>
+#include <algorithm>
 #include "Robot.h"
 
-Robot::Robot() : gen(std::random_device{}()) {
+Robot::Robot(std::mt19937 gen) {
     
     // for random start
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
@@ -62,7 +63,7 @@ bool Robot::geneMatch(int geneIdx) {
     return true;
 }
 
-void Robot::movement(Map& m) {
+void Robot::movement(Map& m, std::mt19937 gen) {
     // update surroundings
     look(m);
 
@@ -71,15 +72,15 @@ void Robot::movement(Map& m) {
         if (geneMatch(i)) {
             // move direction of first match
 
-            move(m, movementGene[i]);
+            move(m, movementGene[i], gen);
             return;
         }
     }
     // default to final gene if no match
-    move(m, movementGene[Config::GENE_COUNT-1]);
+    move(m, movementGene[Config::GENE_COUNT-1], gen);
 }
 
-void Robot::move(Map& m, int mgene) {
+void Robot::move(Map& m, int mgene, std::mt19937 gen) {
     
     // eat energy and increment turns alive
     energy--;
@@ -114,13 +115,6 @@ void Robot::move(Map& m, int mgene) {
     }
 }
 
-
-
-
-
-
-
-
 void Robot::displayGenes() {
     std::cout << "Genes: \n";
     for (int i = 0; i < geneCount; i++) {
@@ -129,4 +123,10 @@ void Robot::displayGenes() {
         }
         std::cout << " m: " << movementGene[i] << std::endl;
     }
+}
+
+
+void Robot::setGenes(Robot r) {
+    std::copy(r.getGenes(), r.getGenes() + Config::GENE_COUNT, genes);
+    std::copy(r.getMovementGene(), r.getMovementGene() + Config::GENE_COUNT, movementGene);
 }
