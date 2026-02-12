@@ -3,52 +3,54 @@
 
 Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
 
-    // populate array of robots
-    for (int i = 0; i < Config::ROBOTS_PER_GEN; i++) {
-        Robot robert;
-        roboArray[i] = robert;
+    // populate array of robots w/ rng engine
+    for (auto &r : roboArray) {
+        r.init(rng);
     }
 }
 
 void Simulator::runSim() {
-    int fitnessArr[Config::GENERATIONS];
 
-    // main loop
+    std::array<int, Config::GENERATIONS> fitnessArray;
+
     for (int i = 0; i < Config::GENERATIONS; i++) {
         avgFitness = 0;
 
-        // generational loop, generates new map for every bot
-        for (int j = 0; j < Config::ROBOTS_PER_GEN; j++) {
+        // for every bot, generate new map and move through while energy
+        for (auto& r : roboArray) {
             generator.populateMap(map);
-            map.setCell(roboArray[j].getRow(), roboArray[j].getCol(), Config::THE_GUY);
-            
-            while (roboArray[j].getEnergy() > 0) {
-                roboArray[j].movement(map);
+            map.setCell(r.getRow(), r.getCol(), Config::THE_GUY);
+
+            while (r.getEnergy() > 0) {
+                r.movement(map, rng);
             }
-            
-            avgFitness += roboArray[i].getFitness();
+
+            avgFitness += r.getFitness();
         }
 
-        // idx corresponds to generation
         avgFitness /= Config::ROBOTS_PER_GEN;
-        fitnessArr[i] = avgFitness;
+        fitnessArray[i] = avgFitness;
 
-        // sort descending by fitness
-        std::sort(roboArray, roboArray + Config::ROBOTS_PER_GEN, 
-            [](Robot& a, Robot& b) {
-                return a.getFitness() > b.getFitness();
-            });
+        // sort descending 
+        sort(roboArray.begin(), roboArray.end(), [](const Robot& a, Robot& b) {
+            return a.getFitness() > b.getFitness();
+        });
         
-        // repopulate();
+        repopulate();
 
+        roboArray = nextGen;
     }
+
+    bestBot = roboArray[0];
+
+    // for (auto& r : roboArray) {
+    //     std::cout << r;
+    // }
+
 }
 
 void Simulator::repopulate() {
     
-    // new generation
-    Robot nextGen[Config::ROBOTS_PER_GEN];
-
     // preserve top n%
     for (int i = 0; i < Config::ROBOTS_PER_GEN * Config::TOP_PERCENT; i++) {
         nextGen[i] = roboArray[i];
@@ -67,7 +69,7 @@ void Simulator::repopulate() {
 Robot Simulator::tournament() {
     
     Robot best;
-    // std::uniform_int_distribution<int> dist(0, Config::ROBOTS_PER_GEN-1);
+    best.init(rng);
     
     // random n robots, picks the best one
     for (int i = 0; i < Config::TOURNAMENT_SIZE; i++) {
@@ -85,13 +87,14 @@ void Simulator::crossover(Robot p1, Robot p2) {
     Robot child1;
     Robot child2;
 
-    if (dist(rng) < 0.5) {
-        child1.setGenes(p1);
-        child2.setGenes(p2);
+    for (int i = 0; i < Config::GENE_COUNT; i++) {
+        if (dist(rng) < 0.5) {
+            child1.setGene(p1, i);
+            child2.setGene(p2, i);
+        }
+        else {
+            child1.setGene(p2, i);
+            child2.setGene(p1, i);
+        }
     }
-    else {
-        child1.setGenes(p2);
-        child2.setGenes(p1);
-    }
-
 }

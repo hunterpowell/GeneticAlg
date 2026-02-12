@@ -14,9 +14,11 @@ class Simulator {
         std::uniform_real_distribution<double> dist;
         MapGenerator generator;
         Map map;
-        Robot roboArray[Config::ROBOTS_PER_GEN];
+        std::array<Robot, Config::ROBOTS_PER_GEN> roboArray;
         Robot bestBot;
         int avgFitness;
+
+        std::array<Robot, Config::ROBOTS_PER_GEN> nextGen;
 
         void repopulate();
         Robot tournament();

@@ -17,13 +17,14 @@ class Robot {
         std::array<int, Config::GENE_COUNT> movementGene;
 
         bool geneMatch(int);
-        void move(Map&, int, std::mt19937);
+        void move(Map&, int, std::mt19937&);
 
     public:
-        Robot(std::mt19937);
-        
+        Robot() = default;
+        void init(std::mt19937&);
+
         void look(Map);
-        void movement(Map&, std::mt19937);
+        void movement(Map&, std::mt19937&);
         void displayGenes();
         
         const std::array<int, 8>& getSurroundings() const {return surroundings;}
@@ -33,10 +34,9 @@ class Robot {
         int getRow() {return position[0];}
         int getCol() {return position[1];}
         const std::array<std::array<int, Config::VALS_PER_GENE>, Config::GENE_COUNT>& getGenes() const {return genes;}
-        int* getMovementGene() {return &movementGene[0];}
-        const std::array<int, Config::GENE_COUNT>& getMovmentGene() const {return movementGene;}
+        const std::array<int, Config::GENE_COUNT>& getMovementGene() const {return movementGene;}
         
-        void setGenes(Robot);
+        void setGene(Robot, int);
 
         friend std::ostream &operator << (std::ostream &output, const Robot &x);
 

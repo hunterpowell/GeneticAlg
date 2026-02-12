@@ -3,8 +3,8 @@
 #include <algorithm>
 #include "Robot.h"
 
-Robot::Robot(std::mt19937 gen) {
-    
+// constructor, not using normal one bc i need to pass in mersenne twister
+void Robot::init(std::mt19937& gen) {
     // for random start
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
 
@@ -23,12 +23,10 @@ Robot::Robot(std::mt19937 gen) {
 
     for (int i = 0; i < geneCount; i++) {
         for (int j = 0; j < valsPerGene; j++) {
-            int r = geneDist(gen);
-            genes[i][j] = r;
+            genes[i][j] = geneDist(gen);
         }
         // randomizes 0-8 for n, ne, e, se, s, sw, w, nw, random
-        int r = moveDist(gen);
-        movementGene[i] = r;
+        movementGene[i] = moveDist(gen);
     }
 }
 
@@ -43,8 +41,8 @@ std::ostream &operator << (std::ostream &output, const Robot &x) {
 
 void Robot::look(Map m) {
     // populate surroundings array
-    int dy[] = {-1, -1, 0, 1, 1, 1, 0, -1};
-    int dx[] = {0, 1, 1, 1, 0, -1, -1, -1};
+    std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+    std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
     for (int i = 0; i < 8; i++) {
         surroundings[i] = m.checkCell(
             position[0] + dy[i], 
@@ -63,7 +61,7 @@ bool Robot::geneMatch(int geneIdx) {
     return true;
 }
 
-void Robot::movement(Map& m, std::mt19937 gen) {
+void Robot::movement(Map& m, std::mt19937& gen) {
     // update surroundings
     look(m);
 
@@ -80,7 +78,7 @@ void Robot::movement(Map& m, std::mt19937 gen) {
     move(m, movementGene[Config::GENE_COUNT-1], gen);
 }
 
-void Robot::move(Map& m, int mgene, std::mt19937 gen) {
+void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     
     // eat energy and increment turns alive
     energy--;
@@ -99,8 +97,8 @@ void Robot::move(Map& m, int mgene, std::mt19937 gen) {
         m.setCell(position[0], position[1], Config::EMPTY);
         
         // change y and x based on movement gene
-        int dy[] = {-1, -1, 0, 1, 1, 1, 0, -1};
-        int dx[] = {0, 1, 1, 1, 0, -1, -1, -1};
+        std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+        std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
         position[0] += dy[dir];
         position[1] += dx[dir];
         
@@ -125,8 +123,7 @@ void Robot::displayGenes() {
     }
 }
 
-
-void Robot::setGenes(Robot r) {
-    std::copy(r.getGenes(), r.getGenes() + Config::GENE_COUNT, genes);
-    std::copy(r.getMovementGene(), r.getMovementGene() + Config::GENE_COUNT, movementGene);
+void Robot::setGene(Robot r, int pos) {
+    genes[pos] = r.getGenes()[pos];
+    movementGene[pos] = r.getMovementGene()[pos];
 }

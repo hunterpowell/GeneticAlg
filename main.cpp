@@ -7,7 +7,7 @@ int main() {
     Simulator sim;
     sim.runSim();
 
-    // std::cout << sim.getBestBot();
+    std::cout << sim.getBestBot();
 
     return 0;
 }
