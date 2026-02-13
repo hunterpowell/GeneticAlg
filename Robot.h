@@ -5,7 +5,6 @@
 
 class Robot {
     private:
-        // std::mt19937 gen;
         std::array<int, 8> surroundings;    // 0-7 -> n, ne, e, se, s, sw, w, nw
         std::array<int, 2> position;        // 0-1 -> row, col
         int energy;                         // current energy
@@ -25,7 +24,7 @@ class Robot {
 
         void look(Map);
         void movement(Map&, std::mt19937&);
-        void displayGenes();
+        void reset();
         
         const std::array<int, 8>& getSurroundings() const {return surroundings;}
         int getEnergy() const {return energy;}
@@ -36,8 +35,11 @@ class Robot {
         const std::array<std::array<int, Config::VALS_PER_GENE>, Config::GENE_COUNT>& getGenes() const {return genes;}
         const std::array<int, Config::GENE_COUNT>& getMovementGene() const {return movementGene;}
         
+
         void setGene(Robot, int);
 
+        void displayGenes();
+        
         friend std::ostream &operator << (std::ostream &output, const Robot &x);
 
 };

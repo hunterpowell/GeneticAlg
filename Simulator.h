@@ -15,6 +15,7 @@ class Simulator {
         MapGenerator generator;
         Map map;
         std::array<Robot, Config::ROBOTS_PER_GEN> roboArray;
+        Robot genOneRando;
         Robot bestBot;
         int avgFitness;
 
@@ -22,16 +23,16 @@ class Simulator {
 
         void repopulate();
         Robot tournament();
-        void crossover(Robot, Robot);
+        std::array<Robot, 2> crossover(std::array<Robot, 2>);
 
     public:
         Simulator();
         
         void runSim();
+        void showBots();
 
         Robot getBestBot() {return bestBot;}
         int getAvgFitnesss() {return avgFitness;}
-
 
 };
 

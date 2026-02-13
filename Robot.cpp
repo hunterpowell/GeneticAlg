@@ -69,7 +69,6 @@ void Robot::movement(Map& m, std::mt19937& gen) {
     for (int i = 0; i < Config::GENE_COUNT-1; i++) {
         if (geneMatch(i)) {
             // move direction of first match
-
             move(m, movementGene[i], gen);
             return;
         }
@@ -90,7 +89,7 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     // random dir if movement gene is 8
     dir = (mgene != 8) ? mgene : randomDir(gen);
 
-    // move in a cardinal direction, n e s w respectively
+    // move if direction of movement isn't the wall
     if (surroundings[dir] != Config::WALL) {
         
         // empty current cell as we move
@@ -113,6 +112,17 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     }
 }
 
+void Robot::reset() {
+    energy = 5;
+    fitness = 0;
+    turnsAlive = 0;
+}
+
+void Robot::setGene(Robot r, int pos) {
+    genes[pos] = r.getGenes()[pos];
+    movementGene[pos] = r.getMovementGene()[pos];
+}
+
 void Robot::displayGenes() {
     std::cout << "Genes: \n";
     for (int i = 0; i < geneCount; i++) {
@@ -123,7 +133,3 @@ void Robot::displayGenes() {
     }
 }
 
-void Robot::setGene(Robot r, int pos) {
-    genes[pos] = r.getGenes()[pos];
-    movementGene[pos] = r.getMovementGene()[pos];
-}

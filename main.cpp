@@ -7,7 +7,9 @@ int main() {
     Simulator sim;
     sim.runSim();
 
-    std::cout << sim.getBestBot();
+    // std::cout << "Random bot from gen 1, best performer\nBoth running on new maps\n";
+    sim.showBots();
+    // std::cout << sim.getBestBot();
 
     return 0;
 }

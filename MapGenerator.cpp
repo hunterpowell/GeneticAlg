@@ -11,7 +11,7 @@ MapGenerator::MapGenerator() : gen(std::random_device{}()) {}
 void MapGenerator::populateMap(Map& map) {
     int size = Config::MAP_SIZE;
     int (*grid)[Config::MAP_SIZE] = map.getGrid();
-    int totalCells = size * size;
+    // int totalCells = size * size;
 
     // fill whole grid with 0s to start
     for (int i = 0; i < size; i++) {
