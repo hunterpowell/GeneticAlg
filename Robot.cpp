@@ -39,7 +39,7 @@ std::ostream &operator << (std::ostream &output, const Robot &x) {
     return output;
 }
 
-void Robot::look(Map m) {
+void Robot::look(Map& m) {
     // populate surroundings array
     std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
     std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};

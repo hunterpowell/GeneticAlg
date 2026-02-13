@@ -42,15 +42,17 @@ void Simulator::runSim() {
         sort(roboArray.begin(), roboArray.end(), [](const Robot& a, Robot& b) {
             return a.getFitness() > b.getFitness();
         });
-        
         // save best performers and evolve next generation
         repopulate();
+
+        std::cout << "Avg fitness of gen " << i << ": " << avgFitness << "\n";
     }
 
     // check best performer of each generation to find best overall performer
     if (roboArray[0].getFitness() > bestBot.getFitness()) {
         bestBot = roboArray[0];
     }
+
 }
 
 void Simulator::showBots() {
@@ -115,7 +117,7 @@ Robot Simulator::tournament() {
     return best;
 }
 
-std::array<Robot, 2> Simulator::crossover(std::array<Robot, 2> parents) {
+std::array<Robot, 2> Simulator::crossover(const std::array<Robot, 2>& parents) {
     std::array<Robot, 2> children;
     children[0].init(rng);
     children[1].init(rng);

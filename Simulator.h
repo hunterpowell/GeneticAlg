@@ -23,7 +23,7 @@ class Simulator {
 
         void repopulate();
         Robot tournament();
-        std::array<Robot, 2> crossover(std::array<Robot, 2>);
+        std::array<Robot, 2> crossover(const std::array<Robot, 2>&);
 
     public:
         Simulator();

@@ -22,7 +22,7 @@ class Robot {
         Robot() = default;
         void init(std::mt19937&);
 
-        void look(Map);
+        void look(Map&);
         void movement(Map&, std::mt19937&);
         void reset();
         
