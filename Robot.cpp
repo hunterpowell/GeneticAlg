@@ -8,8 +8,8 @@ void Robot::init(std::mt19937& gen) {
     // for random start
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
 
-    // for random genes, 0-3 for wall, empty, battery, wildcard
-    std::uniform_int_distribution<int> geneDist(0, 3);
+    // for random genes, 0-4 for wall, empty, battery, visited, wildcard
+    std::uniform_int_distribution<int> geneDist(0, 4);
     // 0-8 for n, ne, e, se, s, sw, w, nw, random
     std::uniform_int_distribution<int> moveDist(0, 8);
 
@@ -51,10 +51,11 @@ void Robot::look(Map& m) {
     }
 }
 
+// check one gene at a time, iterate through each value and return false for first miss
 bool Robot::geneMatch(int geneIdx) {
     for (int j = 0; j < Config::VALS_PER_GENE; j++) {
         // check match OR wildcard, if neither we return false
-        if (genes[geneIdx][j] != surroundings[j] && genes[geneIdx][j] != 3) {
+        if (genes[geneIdx][j] != surroundings[j] && genes[geneIdx][j] != Config::WILDCARD) {
             return false;
         }
     }
@@ -92,8 +93,8 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     // move if direction of movement isn't the wall
     if (surroundings[dir] != Config::WALL) {
         
-        // empty current cell as we move
-        m.setCell(position[0], position[1], Config::EMPTY);
+        // set cell to visited as we move
+        m.setCell(position[0], position[1], Config::VISITED);
         
         // change y and x based on movement gene
         std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
@@ -112,10 +113,31 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     }
 }
 
-void Robot::reset() {
+void Robot::reset(std::mt19937& gen) {
     energy = 5;
     fitness = 0;
     turnsAlive = 0;
+    std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
+    position[0] = startDist(gen);
+    position[1] = startDist(gen);
+}
+
+// a few % chance to mutate every time a baby is made
+void Robot::mutate(std::mt19937& rng) {
+    std::uniform_real_distribution<double> chance(0.0, 1.0);
+    std::uniform_int_distribution<int> geneVal(0, 4);
+    std::uniform_int_distribution<int> moveVal(0, 8);
+
+    for (int i = 0; i < Config::GENE_COUNT; i++) {
+        for (int j = 0; j < Config::VALS_PER_GENE; j++) {
+            if (chance(rng) < Config::MUTATION_RATE) {
+                genes[i][j] = geneVal(rng);
+            }
+        }
+        if (chance(rng) < Config::MUTATION_RATE) {
+            movementGene[i] = moveVal(rng);
+        }
+    }
 }
 
 void Robot::setGene(Robot r, int pos) {

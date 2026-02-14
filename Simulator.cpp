@@ -24,7 +24,7 @@ void Simulator::runSim() {
 
         // for every bot, generate new map and move through while energy
         for (auto& r : roboArray) {
-            r.reset();
+            r.reset(rng);
             generator.populateMap(map);
             map.setCell(r.getRow(), r.getCol(), Config::THE_GUY);
 
@@ -45,7 +45,7 @@ void Simulator::runSim() {
         // save best performers and evolve next generation
         repopulate();
 
-        std::cout << "Avg fitness of gen " << i << ": " << avgFitness << "\n";
+        std::cout << "Avg fitness of gen " << i+1 << ": " << avgFitness << "\n";
     }
 
     // check best performer of each generation to find best overall performer
@@ -53,22 +53,25 @@ void Simulator::runSim() {
         bestBot = roboArray[0];
     }
 
+    // bestBot.displayGenes();
+
 }
 
 void Simulator::showBots() {
     
-    genOneRando.reset();
+    genOneRando.reset(rng);
     generator.populateMap(map);
     map.setCell(genOneRando.getRow(), genOneRando.getCol(), Config::THE_GUY);
 
     while (genOneRando.getEnergy() > 0) {
         genOneRando.movement(map, rng);
     }
+
     std::cout << "Random selection from gen 1\n";
     map.display();
     std::cout << genOneRando;
 
-    bestBot.reset();
+    bestBot.reset(rng);
     generator.populateMap(map);
     map.setCell(bestBot.getRow(), bestBot.getCol(), Config::THE_GUY);
 
@@ -94,6 +97,8 @@ void Simulator::repopulate() {
     for (int i = eliteCount; i < Config::ROBOTS_PER_GEN; i++) {
         std::array<Robot, 2> parents = {tournament(), tournament()};
         std::array<Robot, 2> children = crossover(parents);
+        children[0].mutate(rng);
+        children[1].mutate(rng);
         // alternate children
         nextGen[i] = children[i%2];
     }

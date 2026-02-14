@@ -24,7 +24,7 @@ class Robot {
 
         void look(Map&);
         void movement(Map&, std::mt19937&);
-        void reset();
+        void reset(std::mt19937&);
         
         const std::array<int, 8>& getSurroundings() const {return surroundings;}
         int getEnergy() const {return energy;}
@@ -34,7 +34,7 @@ class Robot {
         int getCol() {return position[1];}
         const std::array<std::array<int, Config::VALS_PER_GENE>, Config::GENE_COUNT>& getGenes() const {return genes;}
         const std::array<int, Config::GENE_COUNT>& getMovementGene() const {return movementGene;}
-        
+        void mutate(std::mt19937&);
 
         void setGene(Robot, int);
 

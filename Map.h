@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include <iostream>
+#include <string>
 #include "Config.h"
 
 class Map {
@@ -21,7 +22,24 @@ public:
     void display() {
         for (int i = 0; i < Config::MAP_SIZE; i++) {
             for (int j = 0; j < Config::MAP_SIZE; j++) {
-                std::cout << grid[i][j] << " ";
+                std::string out;
+                switch (grid[i][j]) {
+                    case 0:
+                        out = "O";
+                        break;
+                    case 1:
+                        out = "#";
+                        break;
+                    case 2:
+                        out = "W";
+                        break;
+                    case 3:
+                        out = ".";
+                        break;
+                    default:
+                        out = "R";
+                }
+                std::cout << out << " ";
             }
             std::cout << "\n";
         }
