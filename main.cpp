@@ -6,10 +6,16 @@ int main() {
 
     auto sim = std::make_unique<Simulator>();
     sim->runSim();
-
-    // std::cout << "Random bot from gen 1, best performer\nBoth running on new maps\n";
     sim->showBots();
-    // std::cout << sim->getBestBot();
+
+    /*
+    what's next?
+    output to csv and make matplotlib/python chart
+    maybe go back to 4d movement?
+    more maps per bot 3-5?
+    bot memory?
+    figure out how to break past avg plateau of ~400 
+    */
 
     return 0;
 }
