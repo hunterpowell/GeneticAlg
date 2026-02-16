@@ -26,8 +26,15 @@ for line in open('best.txt', 'r'):
 best_grid = read_grid('best_map.txt')
 rand_grid = read_grid('rand_map.txt')
 
-# 0=empty, 1=battery, 2=wall, 3=visited, 7=the guy
-cmap = ListedColormap(["#828282", "#414141", "#000000", "#A663EA", "#D70000"])  # empty, wall, robot
+colors = {
+        "empty" : "#6B6B6B",
+        "battery" : "#800D0D",
+        "wall" : "#000000",
+        "visited" : "#B281E3",
+        "robot" : "#4800FF"
+        }
+
+cmap = ListedColormap(colors.values())
 
 fig, ax = plt.subplots(2, 2, figsize=(12, 8))
 
@@ -50,15 +57,14 @@ ax[1][1].set_title("Best Performer Map")
 ax[1][1].axis('off')
 
 legend_elements = [
-    Patch(facecolor='#000000', label='Wall'),
-    Patch(facecolor='#414141', label='Battery'),
-    Patch(facecolor='#828282', label='Empty'),
-    Patch(facecolor='#A663EA', label='Visited'),
-    Patch(facecolor='#D70000', label='Robot')
+    Patch(facecolor=colors["wall"], label='Wall'),
+    Patch(facecolor=colors["battery"], label='Battery'),
+    Patch(facecolor=colors["empty"], label='Empty'),
+    Patch(facecolor=colors["visited"], label='Visited'),
+    Patch(facecolor=colors["robot"], label='Robot')
 ]
 
 fig.legend(handles=legend_elements, loc='lower center', ncol=1, bbox_to_anchor=(0.5, 0))
-
 
 plt.tight_layout()
 plt.show()

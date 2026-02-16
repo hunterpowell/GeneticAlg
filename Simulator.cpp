@@ -91,7 +91,7 @@ void Simulator::showBots() {
     std::cout << "Best overall performer\n";
     map.display(bestBotMap);
     std::cout << bestBot;
-    bestBot.displayGenes();
+    // bestBot.displayGenes();
 
 }
 
