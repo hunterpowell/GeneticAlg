@@ -6,13 +6,12 @@
 
 // constructor, not using normal one bc i need to pass in mersenne twister
 void Robot::init(std::mt19937& gen) {
+    
     // for random start
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
-
-    // for random genes, 0-4 for wall, empty, battery, visited, wildcard
+    // for random genes, 0-4 for wall, empty, battery, visited
     std::uniform_int_distribution<int> geneDist(0, 3);
-    // 0-8 for n, ne, e, se, s, sw, w, nw, random
-    // testing 4d movement, n e s w rand
+    // 4d movement, n e s w rand
     std::uniform_int_distribution<int> moveDist(0, 4);
 
     // random start
@@ -27,15 +26,13 @@ void Robot::init(std::mt19937& gen) {
         for (int j = 0; j < valsPerGene; j++) {
             genes[i][j] = geneDist(gen);
         }
-        // randomizes 0-8 for n, ne, e, se, s, sw, w, nw, random
-        // testing 0-4
+        // randomizes 0-4, n e s w rand
         movementGene[i] = moveDist(gen);
     }
 }
 
 // let's me cout << robot; and it'll print out the relevant info
 std::ostream &operator << (std::ostream &output, const Robot &x) {
-    // std::cout << "\nrow: " << x.position[0] << " col: " << x.position[1] << "\n";
     std::cout << "energy: " << x.energy << "\n";
     std::cout << "fitness: " << x.fitness << "\n";
     std::cout << "turns alive: " << x.turnsAlive << "\n";
@@ -44,8 +41,6 @@ std::ostream &operator << (std::ostream &output, const Robot &x) {
 
 void Robot::look(Map& m) {
     // populate surroundings array
-    // std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-    // std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
     std::array<int, 4> dy = {-1, 0, 1, 0};
     std::array<int, 4> dx = {0, 1, 0, -1};
     for (int i = 0; i < Config::VALS_PER_GENE; i++) {
@@ -103,8 +98,6 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
         m.setCell(position[0], position[1], Config::VISITED);
         
         // change y and x based on movement gene
-        // std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-        // std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
         std::array<int, 4> dy = {-1, 0, 1, 0};
         std::array<int, 4> dx = {0, 1, 0, -1};
         position[0] += dy[dir];
@@ -139,11 +132,11 @@ void Robot::mutate(std::mt19937& rng) {
 
     for (int i = 0; i < Config::GENE_COUNT; i++) {
         for (int j = 0; j < Config::VALS_PER_GENE; j++) {
-            if (chance(rng) < Config::MUTATION_RATE) {
+            if (chance(rng) < (Config::MUTATION_RATE/100)) {
                 genes[i][j] = geneVal(rng);
             }
         }
-        if (chance(rng) < Config::MUTATION_RATE) {
+        if (chance(rng) < (Config::MUTATION_RATE/100)) {
             movementGene[i] = moveVal(rng);
         }
     }
@@ -163,4 +156,3 @@ void Robot::displayGenes() {
         std::cout << " m: " << movementGene[i] << std::endl;
     }
 }
-

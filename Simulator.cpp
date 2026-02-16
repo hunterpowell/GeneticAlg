@@ -61,7 +61,6 @@ void Simulator::runSim() {
     // bestBot.displayGenes();
     AvgFile.close();
     BestFile.close();
-
 }
 
 void Simulator::showBots() {
@@ -92,7 +91,6 @@ void Simulator::showBots() {
     map.display(bestBotMap);
     std::cout << bestBot;
     // bestBot.displayGenes();
-
 }
 
 void Simulator::repopulate() {

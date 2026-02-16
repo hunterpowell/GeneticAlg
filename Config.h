@@ -19,11 +19,12 @@ class Config {
         static constexpr int VALS_PER_GENE = 4;
 
         // sim numbers
-        static constexpr int GENERATIONS = 250;
+        static constexpr int GENERATIONS = 1000;
         static constexpr int ROBOTS_PER_GEN = 250;
         static constexpr double TOP_PERCENT = 0.05;
         static constexpr int TOURNAMENT_SIZE = 10;
-        static constexpr double MUTATION_RATE = 0.035;
+        // expressed as a %
+        static constexpr double MUTATION_RATE = 0.1;      // <1% seems optimal
 };
 
 #endif

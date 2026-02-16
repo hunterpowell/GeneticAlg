@@ -27,34 +27,53 @@ best_grid = read_grid('best_map.txt')
 rand_grid = read_grid('rand_map.txt')
 
 colors = {
-        "empty" : "#6B6B6B",
-        "battery" : "#800D0D",
-        "wall" : "#000000",
-        "visited" : "#B281E3",
-        "robot" : "#4800FF"
+        "empty" : "#222648",
+        "battery" : "#37b6cf",
+        "wall" : "#282830",
+        "visited" : "#fea3b4",
+        "robot" : "#ff3d60"
         }
 
 cmap = ListedColormap(colors.values())
 
-fig, ax = plt.subplots(2, 2, figsize=(12, 8))
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+fig.patch.set_facecolor('#1a1a2e')
 
-ax[0][0].plot(avg_x, avg_y, color='xkcd:indigo', lw=2)
-ax[0][0].set_title("Average Fitness")
-ax[0][0].set_facecolor('xkcd:light blue grey')
-ax[0][0].grid()
+for ax in axes.flat:
+    ax.set_facecolor('#16213e')
+    ax.tick_params(colors='#cccccc')
+    ax.xaxis.label.set_color('#cccccc')
+    ax.yaxis.label.set_color('#cccccc')
+    ax.title.set_color('#ffffff')
+    for spine in ax.spines.values():
+        spine.set_edgecolor('#444466')
 
-ax[0][1].plot(best_x, best_y, color='xkcd:indigo', lw=2)
-ax[0][1].set_title("Best Fitness")
-ax[0][1].set_facecolor('xkcd:light blue grey')
-ax[0][1].grid()
+axes[0][0].plot(avg_x, avg_y, color='xkcd:coral', lw=2)
+axes[0][0].set_title("Average Fitness per Gen")
+axes[0][0].grid()
 
-ax[1][0].imshow(rand_grid, cmap=cmap, vmin=0, vmax=4)
-ax[1][0].set_title("Random Bot Map")
-ax[1][0].axis('off')
+axes[0][1].plot(best_x, best_y, color='xkcd:coral', lw=2)
+axes[0][1].set_title("Best Fitness per Gen")
+axes[0][1].grid()
 
-ax[1][1].imshow(best_grid, cmap=cmap, vmin=0, vmax=4)
-ax[1][1].set_title("Best Performer Map")
-ax[1][1].axis('off')
+def add_grid_lines(ax, grid):
+    rows, cols = grid.shape
+    ax.set_xticks(np.arange(-0.5, cols, 1), minor=True)
+    ax.set_yticks(np.arange(-0.5, rows, 1), minor=True)
+    ax.set_xticks([])  # hide major ticks
+    ax.set_yticks([])
+    ax.grid(which='minor', color="#7a7a7a", linewidth=.8)
+    ax.tick_params(which='minor', length=0)
+
+axes[1][0].imshow(rand_grid, cmap=cmap, vmin=0, vmax=4)
+axes[1][0].set_title("Random Gen 1 Bot on a New Map")
+# axis('off') removed
+add_grid_lines(axes[1][0], rand_grid)
+
+axes[1][1].imshow(best_grid, cmap=cmap, vmin=0, vmax=4)
+axes[1][1].set_title("Best Performer From Any Gen on a New Map")
+# axis('off') removed
+add_grid_lines(axes[1][1], best_grid)
 
 legend_elements = [
     Patch(facecolor=colors["wall"], label='Wall'),
@@ -64,7 +83,6 @@ legend_elements = [
     Patch(facecolor=colors["robot"], label='Robot')
 ]
 
-fig.legend(handles=legend_elements, loc='lower center', ncol=1, bbox_to_anchor=(0.5, 0))
-
+fig.legend(handles=legend_elements, loc='lower center', ncol=1, bbox_to_anchor=(0.515, 0.05))
 plt.tight_layout()
 plt.show()
