@@ -48,15 +48,13 @@ void Simulator::runSim() {
         // save best performers and evolve next generation
         repopulate();
 
-        // if (i % 10 == 0) {
-            AvgFile << i << " " << avgFitness << "\n";
-            BestFile << i << " " << roboArray[0].getFitness() << "\n";
-        // }
+        AvgFile << i << " " << avgFitness << "\n";
+        BestFile << i << " " << roboArray[0].getFitness() << "\n";
         std::cout << "Avg fitness of gen " << i+1 << ": " << avgFitness << "\n";
     }
 
     // check best performer of each generation to find best overall performer
-    if (roboArray[0].getFitness() > bestBot.getFitness()) {
+    if (roboArray[0].getFitness() >= bestBot.getFitness()) {
         bestBot = roboArray[0];
     }
 
@@ -67,6 +65,9 @@ void Simulator::runSim() {
 }
 
 void Simulator::showBots() {
+
+    std::ofstream randomBotMap("rand_map.txt");
+    std::ofstream bestBotMap("best_map.txt");
     
     genOneRando.reset(rng);
     generator.populateMap(map);
@@ -77,7 +78,7 @@ void Simulator::showBots() {
     }
 
     std::cout << "Random selection from gen 1\n";
-    map.display();
+    map.display(randomBotMap);
     std::cout << genOneRando;
 
     bestBot.reset(rng);
@@ -88,7 +89,7 @@ void Simulator::showBots() {
         bestBot.movement(map, rng);
     }
     std::cout << "Best overall performer\n";
-    map.display();
+    map.display(bestBotMap);
     std::cout << bestBot;
     bestBot.displayGenes();
 

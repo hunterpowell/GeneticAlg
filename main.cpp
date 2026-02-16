@@ -8,6 +8,8 @@ int main() {
     sim->runSim();
     sim->showBots();
 
+    system("python graph.py");
+
     /*
     what's next?
     output to csv and make matplotlib/python chart

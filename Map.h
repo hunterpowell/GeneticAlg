@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "Config.h"
 
 class Map {
@@ -19,7 +20,7 @@ public:
     int checkCell(int row, int col) {
         return grid[row][col];
     }
-    void display() {
+    void display(std::ostream& file) {
         for (int i = 0; i < Config::MAP_SIZE; i++) {
             for (int j = 0; j < Config::MAP_SIZE; j++) {
                 std::string out;
@@ -40,8 +41,10 @@ public:
                         out = "R";
                 }
                 std::cout << out << " ";
+                file << grid[i][j] << " ";
             }
             std::cout << "\n";
+            file << "\n";
         }
     }
 };

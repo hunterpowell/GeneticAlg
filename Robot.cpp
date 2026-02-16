@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <fstream>
 #include "Robot.h"
 
 // constructor, not using normal one bc i need to pass in mersenne twister
@@ -11,7 +12,7 @@ void Robot::init(std::mt19937& gen) {
     // for random genes, 0-4 for wall, empty, battery, visited, wildcard
     std::uniform_int_distribution<int> geneDist(0, 3);
     // 0-8 for n, ne, e, se, s, sw, w, nw, random
-    // testing 4d movement
+    // testing 4d movement, n e s w rand
     std::uniform_int_distribution<int> moveDist(0, 4);
 
     // random start

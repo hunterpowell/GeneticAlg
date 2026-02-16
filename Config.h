@@ -24,7 +24,6 @@ class Config {
         static constexpr double TOP_PERCENT = 0.05;
         static constexpr int TOURNAMENT_SIZE = 10;
         static constexpr double MUTATION_RATE = 0.035;
-
 };
 
 #endif
