@@ -9,9 +9,10 @@ void Robot::init(std::mt19937& gen) {
     std::uniform_int_distribution<int> startDist(1, Config::MAP_SIZE-2);
 
     // for random genes, 0-4 for wall, empty, battery, visited, wildcard
-    std::uniform_int_distribution<int> geneDist(0, 4);
+    std::uniform_int_distribution<int> geneDist(0, 3);
     // 0-8 for n, ne, e, se, s, sw, w, nw, random
-    std::uniform_int_distribution<int> moveDist(0, 8);
+    // testing 4d movement
+    std::uniform_int_distribution<int> moveDist(0, 4);
 
     // random start
     position[0] = startDist(gen);
@@ -26,13 +27,14 @@ void Robot::init(std::mt19937& gen) {
             genes[i][j] = geneDist(gen);
         }
         // randomizes 0-8 for n, ne, e, se, s, sw, w, nw, random
+        // testing 0-4
         movementGene[i] = moveDist(gen);
     }
 }
 
 // let's me cout << robot; and it'll print out the relevant info
 std::ostream &operator << (std::ostream &output, const Robot &x) {
-    std::cout << "\nrow: " << x.position[0] << " col: " << x.position[1] << "\n";
+    // std::cout << "\nrow: " << x.position[0] << " col: " << x.position[1] << "\n";
     std::cout << "energy: " << x.energy << "\n";
     std::cout << "fitness: " << x.fitness << "\n";
     std::cout << "turns alive: " << x.turnsAlive << "\n";
@@ -41,9 +43,11 @@ std::ostream &operator << (std::ostream &output, const Robot &x) {
 
 void Robot::look(Map& m) {
     // populate surroundings array
-    std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-    std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
-    for (int i = 0; i < 8; i++) {
+    // std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+    // std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
+    std::array<int, 4> dy = {-1, 0, 1, 0};
+    std::array<int, 4> dx = {0, 1, 0, -1};
+    for (int i = 0; i < Config::VALS_PER_GENE; i++) {
         surroundings[i] = m.checkCell(
             position[0] + dy[i], 
             position[1] + dx[i]
@@ -85,10 +89,11 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     turnsAlive++;
 
     int dir;
-    std::uniform_int_distribution<int> randomDir(0, 7);
+    std::uniform_int_distribution<int> randomDir(0, 3);
 
     // random dir if movement gene is 8
-    dir = (mgene != 8) ? mgene : randomDir(gen);
+    // reworked for 4d movement
+    dir = (mgene != 4) ? mgene : randomDir(gen);
 
     // move if direction of movement isn't the wall
     if (surroundings[dir] != Config::WALL) {
@@ -97,8 +102,10 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
         m.setCell(position[0], position[1], Config::VISITED);
         
         // change y and x based on movement gene
-        std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
-        std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
+        // std::array<int, 8> dy = {-1, -1, 0, 1, 1, 1, 0, -1};
+        // std::array<int, 8> dx = {0, 1, 1, 1, 0, -1, -1, -1};
+        std::array<int, 4> dy = {-1, 0, 1, 0};
+        std::array<int, 4> dx = {0, 1, 0, -1};
         position[0] += dy[dir];
         position[1] += dx[dir];
         
@@ -125,8 +132,9 @@ void Robot::reset(std::mt19937& gen) {
 // a few % chance to mutate every time a baby is made
 void Robot::mutate(std::mt19937& rng) {
     std::uniform_real_distribution<double> chance(0.0, 1.0);
+    // this is the only place wildcards can eneter the gene pool
     std::uniform_int_distribution<int> geneVal(0, 4);
-    std::uniform_int_distribution<int> moveVal(0, 8);
+    std::uniform_int_distribution<int> moveVal(0, 4);
 
     for (int i = 0; i < Config::GENE_COUNT; i++) {
         for (int j = 0; j < Config::VALS_PER_GENE; j++) {

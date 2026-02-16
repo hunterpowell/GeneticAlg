@@ -15,12 +15,12 @@ class Config {
         static constexpr int TOTAL_CELLS = (MAP_SIZE-2) * (MAP_SIZE-2);     // -2 bc i don't want to turn the walls into batteries
         
         // robot numbers
-        static constexpr int GENE_COUNT = 128;
-        static constexpr int VALS_PER_GENE = 8;
+        static constexpr int GENE_COUNT = 32;
+        static constexpr int VALS_PER_GENE = 4;
 
         // sim numbers
-        static constexpr int GENERATIONS = 500;
-        static constexpr int ROBOTS_PER_GEN = 500;
+        static constexpr int GENERATIONS = 250;
+        static constexpr int ROBOTS_PER_GEN = 250;
         static constexpr double TOP_PERCENT = 0.05;
         static constexpr int TOURNAMENT_SIZE = 10;
         static constexpr double MUTATION_RATE = 0.035;

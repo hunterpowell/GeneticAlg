@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 #include "Simulator.h"
 
 Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
@@ -15,7 +17,8 @@ Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
 }
 
 void Simulator::runSim() {
-
+    std::ofstream AvgFile("averages.txt");
+    std::ofstream BestFile("best.txt");
     // stores avg fitness of every gen (idx is gen #)
     std::array<int, Config::GENERATIONS> fitnessArray;
 
@@ -45,6 +48,10 @@ void Simulator::runSim() {
         // save best performers and evolve next generation
         repopulate();
 
+        // if (i % 10 == 0) {
+            AvgFile << i << " " << avgFitness << "\n";
+            BestFile << i << " " << roboArray[0].getFitness() << "\n";
+        // }
         std::cout << "Avg fitness of gen " << i+1 << ": " << avgFitness << "\n";
     }
 
@@ -54,6 +61,8 @@ void Simulator::runSim() {
     }
 
     // bestBot.displayGenes();
+    AvgFile.close();
+    BestFile.close();
 
 }
 
@@ -81,6 +90,7 @@ void Simulator::showBots() {
     std::cout << "Best overall performer\n";
     map.display();
     std::cout << bestBot;
+    bestBot.displayGenes();
 
 }
 
