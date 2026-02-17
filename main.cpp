@@ -1,23 +1,21 @@
 #include <iostream>
 #include <random>
+#include <chrono>
 #include "Simulator.h"
 
 int main() {
 
+    auto start = std::chrono::high_resolution_clock::now();
+    
     auto sim = std::make_unique<Simulator>();
     sim->runSim();
     sim->showBots();
 
     system("python graph.py");
 
-    /*
-    what's next?
-    output to csv and make matplotlib/python chart
-    maybe go back to 4d movement?
-    more maps per bot 3-5?
-    bot memory?
-    figure out how to break past avg plateau of ~400 
-    */
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << "Time taken by function: " << duration.count() << " microseconds\n";
 
     return 0;
 }
