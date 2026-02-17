@@ -12,8 +12,8 @@ int main() {
     sim->showBots();
 
     auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << "Time taken by sim: " << duration.count() / 1000000 << " seconds\n";
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    std::cout << "Time taken by sim: " << duration.count() << " milliseconds\n";
     
     system("python graph.py");
 

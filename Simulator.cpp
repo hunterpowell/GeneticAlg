@@ -68,7 +68,7 @@ void Simulator::runSim() {
 
         AvgFile << i << " " << localAvg << "\n";
         BestFile << i << " " << roboArray[0].getFitness() << "\n";
-        std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
+        // std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
     }
 
     // check best performer of each generation to find best overall performer
