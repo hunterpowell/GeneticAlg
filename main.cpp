@@ -13,7 +13,7 @@ int main() {
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << "Time taken by function: " << duration.count() << " microseconds\n";
+    std::cout << "Time taken by function: " << duration.count() / 1000000 << " seconds\n";
     
     system("python graph.py");
 

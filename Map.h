@@ -4,16 +4,17 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <array>
 #include "Config.h"
 
 class Map {
 private: 
-    int grid[Config::MAP_SIZE][Config::MAP_SIZE];
+    std::array<std::array<int, Config::MAP_SIZE>, Config::MAP_SIZE> grid;
 
 public: 
     Map() = default;
 
-    int (*getGrid())[Config::MAP_SIZE] {return grid;}
+    std::array<std::array<int, Config::MAP_SIZE>, Config::MAP_SIZE>& getGrid() {return grid;}
     void setCell(int row, int col, int n) {
         grid[row][col] = n;
     }

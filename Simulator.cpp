@@ -21,49 +21,34 @@ Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
 void Simulator::runSim() {
     std::ofstream AvgFile("averages.txt");
     std::ofstream BestFile("best.txt");
-    // stores avg fitness of every gen (idx is gen #)
-    std::array<int, Config::GENERATIONS> fitnessArray;
 
-    // int numThreads = omp_get_max_threads();
-    // std::vector<std::mt19937> rngs(numThreads);
-    // // seed each thread with new rng
-    // for (int i = 0; i < numThreads; i++) {
-    //     rngs[i] = std::mt19937(rng());
-    // }
+    int numThreads = omp_get_max_threads();
+    std::vector<std::mt19937> rngs(numThreads);
+    // seed each thread with new rng
+    for (int i = 0; i < numThreads; i++) {
+        rngs[i] = std::mt19937(rng());
+    }
 
     for (int i = 0; i < Config::GENERATIONS; i++) {
-        // avgFitness = 0;
         int localAvg = 0;
 
-        // for every bot, generate new map and move through while energy
-        for (auto& r : roboArray) {
-            r.reset(rng);
-            generator.populateMap(map, rng);
-            map.setCell(r.getRow(), r.getCol(), Config::THE_GUY);
+        // parallelism through OpenMP
+        #pragma omp parallel for reduction(+:localAvg)
+        for (int j = 0; j < Config::ROBOTS_PER_GEN; j++) {
+            int tid = omp_get_thread_num();
 
-            while (r.getEnergy() > 0) {
-                r.movement(map, rng);
+            Map localMap; 
+            roboArray[j].reset(rngs[tid]);
+            generator.populateMap(localMap, rngs[tid]);
+            localMap.setCell(roboArray[j].getRow(), roboArray[j].getCol(), Config::THE_GUY);
+
+            while (roboArray[j].getEnergy() > 0) {
+                roboArray[j].movement(localMap, rngs[tid]);
             }
-
-            localAvg += r.getFitness();
+            localAvg += roboArray[j].getFitness();
         }
-        // #pragma omp parallel for reduction(+:localAvg)
-        // for (int j = 0; j < Config::ROBOTS_PER_GEN; j++) {
-        //     int tid = omp_get_thread_num();
-
-        //     Map localMap; 
-        //     roboArray[j].reset(rngs[tid]);
-        //     generator.populateMap(localMap, rngs[tid]);
-        //     localMap.setCell(roboArray[j].getRow(), roboArray[j].getCol(), Config::THE_GUY);
-
-        //     while (roboArray[j].getEnergy() > 0) {
-        //         roboArray[j].movement(localMap, rngs[tid]);
-        //     }
-        //     localAvg += roboArray[j].getFitness();
-        // }
 
         localAvg /= Config::ROBOTS_PER_GEN;
-        fitnessArray[i] = localAvg;
 
         // sort descending 
         std::sort(roboArray.begin(), roboArray.end(), [](const Robot& a, const Robot& b) {
