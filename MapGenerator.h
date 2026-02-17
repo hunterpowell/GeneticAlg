@@ -9,8 +9,8 @@ class MapGenerator {
         std::mt19937 gen;
 
     public:
-        MapGenerator();
-        void populateMap(Map& m);
+        // MapGenerator();
+        void populateMap(Map& m, std::mt19937&);
 
 };
 

@@ -1,6 +1,8 @@
+#include <omp.h>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "Simulator.h"
 
 Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
@@ -22,35 +24,57 @@ void Simulator::runSim() {
     // stores avg fitness of every gen (idx is gen #)
     std::array<int, Config::GENERATIONS> fitnessArray;
 
+    int numThreads = omp_get_max_threads();
+    std::vector<std::mt19937> rngs(numThreads);
+    // seed each thread with new rng
+    for (int i = 0; i < numThreads; i++) {
+        rngs[i] = std::mt19937(rng());
+    }
+
     for (int i = 0; i < Config::GENERATIONS; i++) {
         avgFitness = 0;
+        int localAvg = 0;
 
-        // for every bot, generate new map and move through while energy
-        for (auto& r : roboArray) {
-            r.reset(rng);
-            generator.populateMap(map);
-            map.setCell(r.getRow(), r.getCol(), Config::THE_GUY);
+        // // for every bot, generate new map and move through while energy
+        // for (auto& r : roboArray) {
+        //     r.reset(rng);
+        //     generator.populateMap(map);
+        //     map.setCell(r.getRow(), r.getCol(), Config::THE_GUY);
 
-            while (r.getEnergy() > 0) {
-                r.movement(map, rng);
+        //     while (r.getEnergy() > 0) {
+        //         r.movement(map, rng);
+        //     }
+
+        //     avgFitness += r.getFitness();
+        // }
+        #pragma omp parallel for reduction(+:localAvg)
+        for (int j = 0; j < Config::ROBOTS_PER_GEN; j++) {
+            int tid = omp_get_thread_num();
+
+            Map localMap; 
+            roboArray[j].reset(rngs[tid]);
+            generator.populateMap(localMap, rngs[tid]);
+            localMap.setCell(roboArray[j].getRow(), roboArray[j].getCol(), Config::THE_GUY);
+
+            while (roboArray[j].getEnergy() > 0) {
+                roboArray[j].movement(localMap, rngs[tid]);
             }
-
-            avgFitness += r.getFitness();
+            localAvg += roboArray[j].getFitness();
         }
 
-        avgFitness /= Config::ROBOTS_PER_GEN;
-        fitnessArray[i] = avgFitness;
+        localAvg /= Config::ROBOTS_PER_GEN;
+        fitnessArray[i] = localAvg;
 
         // sort descending 
-        sort(roboArray.begin(), roboArray.end(), [](const Robot& a, Robot& b) {
+        std::sort(roboArray.begin(), roboArray.end(), [](const Robot& a, const Robot& b) {
             return a.getFitness() > b.getFitness();
         });
         // save best performers and evolve next generation
         repopulate();
 
-        AvgFile << i << " " << avgFitness << "\n";
+        AvgFile << i << " " << localAvg << "\n";
         BestFile << i << " " << roboArray[0].getFitness() << "\n";
-        std::cout << "Avg fitness of gen " << i+1 << ": " << avgFitness << "\n";
+        std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
     }
 
     // check best performer of each generation to find best overall performer
@@ -69,7 +93,7 @@ void Simulator::showBots() {
     std::ofstream bestBotMap("best_map.txt");
     
     genOneRando.reset(rng);
-    generator.populateMap(map);
+    generator.populateMap(map, rng);
     map.setCell(genOneRando.getRow(), genOneRando.getCol(), Config::THE_GUY);
 
     while (genOneRando.getEnergy() > 0) {
@@ -81,7 +105,7 @@ void Simulator::showBots() {
     std::cout << genOneRando;
 
     bestBot.reset(rng);
-    generator.populateMap(map);
+    generator.populateMap(map, rng);
     map.setCell(bestBot.getRow(), bestBot.getCol(), Config::THE_GUY);
 
     while (bestBot.getEnergy() > 0) {
