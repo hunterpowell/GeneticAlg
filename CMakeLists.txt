@@ -14,3 +14,6 @@ add_executable(runsim
     Robot.cpp
     Simulator.cpp
 )
+
+find_package(OpenMP REQUIRED)
+target_link_libraries(runsim OpenMP::OpenMP_CXX)

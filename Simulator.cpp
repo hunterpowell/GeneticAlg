@@ -1,8 +1,8 @@
+#include <omp.h>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <omp.h>
 #include "Simulator.h"
 
 Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
@@ -33,6 +33,7 @@ void Simulator::runSim() {
 
     for (int i = 0; i < Config::GENERATIONS; i++) {
         avgFitness = 0;
+        int localAvg = 0;
 
         // // for every bot, generate new map and move through while energy
         // for (auto& r : roboArray) {
@@ -46,8 +47,8 @@ void Simulator::runSim() {
 
         //     avgFitness += r.getFitness();
         // }
-        #pragma omp parallel for reduction(+:avgFitness)
-        for (int j = 0; j < Config::GENERATIONS; i++) {
+        #pragma omp parallel for reduction(+:localAvg)
+        for (int j = 0; j < Config::ROBOTS_PER_GEN; j++) {
             int tid = omp_get_thread_num();
 
             Map localMap; 
@@ -58,21 +59,22 @@ void Simulator::runSim() {
             while (roboArray[j].getEnergy() > 0) {
                 roboArray[j].movement(localMap, rngs[tid]);
             }
+            localAvg += roboArray[j].getFitness();
         }
 
-        avgFitness /= Config::ROBOTS_PER_GEN;
-        fitnessArray[i] = avgFitness;
+        localAvg /= Config::ROBOTS_PER_GEN;
+        fitnessArray[i] = localAvg;
 
         // sort descending 
-        sort(roboArray.begin(), roboArray.end(), [](const Robot& a, Robot& b) {
+        std::sort(roboArray.begin(), roboArray.end(), [](const Robot& a, const Robot& b) {
             return a.getFitness() > b.getFitness();
         });
         // save best performers and evolve next generation
         repopulate();
 
-        AvgFile << i << " " << avgFitness << "\n";
+        AvgFile << i << " " << localAvg << "\n";
         BestFile << i << " " << roboArray[0].getFitness() << "\n";
-        std::cout << "Avg fitness of gen " << i+1 << ": " << avgFitness << "\n";
+        std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
     }
 
     // check best performer of each generation to find best overall performer
