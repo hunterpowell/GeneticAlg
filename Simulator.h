@@ -1,11 +1,12 @@
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
-
+#include <omp.h>
 #include "Config.h"
 #include "Robot.h"
 #include "MapGenerator.h"
 #include "Map.h"
+
 
 
 class Simulator {
@@ -17,23 +18,22 @@ class Simulator {
         std::array<Robot, Config::ROBOTS_PER_GEN> roboArray;
         Robot genOneRando;
         Robot bestBot;
-        int avgFitness;
-
+        
+        std::vector<std::mt19937> rngs;
         std::array<Robot, Config::ROBOTS_PER_GEN> nextGen;
-
+        
         void repopulate();
-        Robot tournament();
-        std::array<Robot, 2> crossover(const std::array<Robot, 2>&);
-
+        Robot tournament(std::mt19937&);
+        std::array<Robot, 2> crossover(const std::array<Robot, 2>&, std::mt19937&);
+        
     public:
+
         Simulator();
         
         void runSim();
         void showBots();
 
         Robot getBestBot() {return bestBot;}
-        int getAvgFitnesss() {return avgFitness;}
-
 };
 
 #endif
