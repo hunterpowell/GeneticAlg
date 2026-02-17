@@ -20,7 +20,7 @@ class Config {
 
         // sim numbers
         static constexpr int GENERATIONS = 1000;
-        static constexpr int ROBOTS_PER_GEN = 250;
+        static constexpr int ROBOTS_PER_GEN = 256;
         static constexpr double TOP_PERCENT = 0.05;
         static constexpr int TOURNAMENT_SIZE = 10;
         // expressed as a %

@@ -5,10 +5,7 @@
 #include "MapGenerator.h"
 #include "Config.h"
 
-// just initializes the random generator
-MapGenerator::MapGenerator() : gen(std::random_device{}()) {}
-
-void MapGenerator::populateMap(Map& map) {
+void MapGenerator::populateMap(Map& map, std::mt19937& rng) {
     int size = Config::MAP_SIZE;
     int (*grid)[Config::MAP_SIZE] = map.getGrid();
     // int totalCells = size * size;
@@ -41,7 +38,7 @@ void MapGenerator::populateMap(Map& map) {
     }
     
     // shuffle all interior cells
-    std::shuffle(interiorPos.begin(), interiorPos.end(), gen);
+    std::shuffle(interiorPos.begin(), interiorPos.end(), rng);
 
     // fills first 40% of (shuffled) cells with batteries
     for (int i = 0; i < maxBatteries; i++) {
