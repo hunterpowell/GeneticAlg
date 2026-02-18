@@ -97,7 +97,7 @@ legend_elements = [
     Patch(facecolor=colors["visited"], label='Visited'),
     Patch(facecolor=colors["robot"],   label='Robot')
 ]
-fig.legend(handles=legend_elements, loc='lower center', ncol=1, bbox_to_anchor=(0.515, 0.05))
+fig.legend(handles=legend_elements, loc='lower center', ncol=1, bbox_to_anchor=(0.495, 0.05))
 
 plt.tight_layout()
 plt.show()
