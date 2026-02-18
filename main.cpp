@@ -5,6 +5,7 @@
 
 int main() {
 
+    std::cout << "Running...\n";
     auto start = std::chrono::high_resolution_clock::now();
     
     auto sim = std::make_unique<Simulator>();

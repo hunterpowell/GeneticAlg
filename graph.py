@@ -48,12 +48,16 @@ for ax in axes.flat:
     for spine in ax.spines.values():
         spine.set_edgecolor('#444466')
 
-axes[0][0].plot(avg_x, avg_y, color='xkcd:coral', lw=2)
+axes[0][0].plot(avg_x, [y/8 for y in avg_y], color='xkcd:coral', lw=2)
 axes[0][0].set_title("Average Fitness per Gen")
+axes[0][0].set_label("Fitness")
+axes[0][0].yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f'{v:.0f}%'))
 axes[0][0].grid()
 
-axes[0][1].plot(best_x, best_y, color='xkcd:coral', lw=2)
+axes[0][1].plot(best_x, [y/8 for y in best_y], color='xkcd:coral', lw=2)
 axes[0][1].set_title("Best Fitness per Gen")
+axes[0][0].set_label("Fitness")
+axes[0][1].yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f'{v:.0f}%'))
 axes[0][1].grid()
 
 def add_grid_lines(ax, grid):
@@ -67,12 +71,10 @@ def add_grid_lines(ax, grid):
 
 axes[1][0].imshow(rand_grid, cmap=cmap, vmin=0, vmax=4)
 axes[1][0].set_title("Random Gen 1 Bot on a New Map")
-# axis('off') removed
 add_grid_lines(axes[1][0], rand_grid)
 
 axes[1][1].imshow(best_grid, cmap=cmap, vmin=0, vmax=4)
 axes[1][1].set_title("Best Performer From Any Gen on a New Map")
-# axis('off') removed
 add_grid_lines(axes[1][1], best_grid)
 
 legend_elements = [

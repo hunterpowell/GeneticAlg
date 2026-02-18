@@ -1,8 +1,7 @@
-#include <omp.h>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <omp.h>
 // #include <chrono>
 // using MyClock = std::chrono::high_resolution_clock;
 
