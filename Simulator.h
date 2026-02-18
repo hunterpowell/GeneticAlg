@@ -16,6 +16,7 @@ class Simulator {
         MapGenerator generator;
         Map map;
         std::array<Robot, Config::ROBOTS_PER_GEN> roboArray;
+        int topBots;
         Robot genOneRando;
         Robot bestBot;
         

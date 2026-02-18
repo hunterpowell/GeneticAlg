@@ -13,6 +13,8 @@ Simulator::Simulator() : rng(std::random_device{}()), dist(0.0, 1.0) {
     for (auto &r : roboArray) {
         r.init(rng);
     }
+
+    topBots = (int)(Config::ROBOTS_PER_GEN * Config::TOP_PERCENT);
     
     // pick random from gen 1 for display later
     genOneRando = roboArray[69];
@@ -52,8 +54,9 @@ void Simulator::runSim() {
         
         localAvg /= Config::ROBOTS_PER_GEN;
         
-        // sort descending 
-        std::sort(roboArray.begin(), roboArray.end(), [](const Robot& a, const Robot& b) {
+        // sort only top n descending 
+        std::partial_sort(roboArray.begin(), roboArray.begin() + topBots, roboArray.end(),
+            [](const Robot& a, const Robot& b) {
             return a.getFitness() > b.getFitness();
         });
 

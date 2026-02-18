@@ -87,8 +87,7 @@ void Robot::move(Map& m, int mgene, std::mt19937& gen) {
     int dir;
     std::uniform_int_distribution<int> randomDir(0, 3);
 
-    // random dir if movement gene is 8
-    // reworked for 4d movement
+    // random dir if movement gene is 4
     dir = (mgene != 4) ? mgene : randomDir(gen);
 
     // move if direction of movement isn't the wall
