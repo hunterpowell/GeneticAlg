@@ -11,7 +11,7 @@ class Config {
         static constexpr int THE_GUY = 7;
 
         // map size
-        static constexpr int MAP_SIZE = 22;
+        static constexpr int MAP_SIZE = 52;
         static constexpr int TOTAL_CELLS = (MAP_SIZE-2) * (MAP_SIZE-2);     // -2 bc i don't want to turn the walls into batteries
         
         // robot numbers

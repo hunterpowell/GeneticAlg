@@ -32,6 +32,8 @@ void Simulator::runSim() {
     std::ofstream AvgFile("averages.txt");
     std::ofstream BestFile("best.txt");
 
+    AvgFile << -1 << " " << Config::TOTAL_CELLS << "\n";
+
     double progress = 0;
 
     for (int i = 0; i < Config::GENERATIONS; i++) {
@@ -117,7 +119,7 @@ void Simulator::showBots() {
     }
 
     // std::cout << "Random selection from gen 1\n";
-    map.display(randomBotMap);
+    map.writeToFile(randomBotMap);
     // std::cout << genOneRando;
 
     bestBot.reset(rng);
@@ -128,7 +130,7 @@ void Simulator::showBots() {
         bestBot.movement(map, rng);
     }
     // std::cout << "Best overall performer\n";
-    map.display(bestBotMap);
+    map.writeToFile(bestBotMap);
     // std::cout << bestBot;
     // bestBot.displayGenes();
 }

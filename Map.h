@@ -21,30 +21,36 @@ public:
     int checkCell(int row, int col) {
         return grid[row][col];
     }
-    void display(std::ostream& file) {
+    void display() {
         for (int i = 0; i < Config::MAP_SIZE; i++) {
             for (int j = 0; j < Config::MAP_SIZE; j++) {
-                // std::string out;
-                // switch (grid[i][j]) {
-                //     case 0:
-                //         out = "O";
-                //         break;
-                //     case 1:
-                //         out = "#";
-                //         break;
-                //     case 2:
-                //         out = "W";
-                //         break;
-                //     case 3:
-                //         out = ".";
-                //         break;
-                //     default:
-                //         out = "R";
-                // }
-                // std::cout << out << " ";
+                std::string out;
+                switch (grid[i][j]) {
+                    case 0:
+                        out = "O";
+                        break;
+                    case 1:
+                        out = "#";
+                        break;
+                    case 2:
+                        out = "W";
+                        break;
+                    case 3:
+                        out = ".";
+                        break;
+                    default:
+                        out = "R";
+                }
+                std::cout << out << " ";
+            }
+            std::cout << "\n";
+        }
+    }
+    void writeToFile(std::ostream& file) {
+         for (int i = 0; i < Config::MAP_SIZE; i++) {
+            for (int j = 0; j < Config::MAP_SIZE; j++) {
                 file << grid[i][j] << " ";
             }
-            // std::cout << "\n";
             file << "\n";
         }
     }

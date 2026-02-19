@@ -34,7 +34,7 @@ Each generation runs 500 robots and selects for the next via:
 Robots always start at a random position on a freshly randomized map, which forces evolution toward generalizable strategies rather than memorized routes.
 
 ### Parallelism
-All parallel benchmarking done on a 500 bot, 500 generation run.
+All parallel benchmarking done on a 500 bot, 500 generation run on a 20x20 map.
 
 Both the evaluation loop and the repopulation loop are parallelized with OpenMP, leading to a 6x speedup. Together they reduced runtime from ~138 seconds down to ~22 seconds on the same hardware. Further optimization (removing allocations, tightening the sim loop) brought it down to ~5 seconds. 
 
@@ -48,7 +48,7 @@ After the simulation, `graph.py` (matplotlib) displays a 2×2 dashboard:
 
 ## Key Findings
 
-- **Visited state is essential.** Without tracking visited cells, average fitness plateaus around 50% map coverage. With it, bots can sometimes reach 90%+.
+- **Visited state is essential.** Without tracking visited cells, average fitness plateaus around 50% map coverage. With it, bots can reach >90%.
 - **4-directional movement outperforms 8-directional.** Despite the added expressiveness, 8-direction movement is computationally significantly heavier and actually peaks lower in practice.
 - **32 genes is the sweet spot.** Fewer genes limit expressiveness, more add noise without improving results.
 - **Wildcards through mutation, not initialization.** Allowing wildcards in initial random genomes makes bots lazy. Restricting them to mutation means they augment good strategies rather than replace them.
@@ -56,7 +56,7 @@ After the simulation, `graph.py` (matplotlib) displays a 2×2 dashboard:
 - **Emergent sweep behavior.** The algorithm often independently evolves a boustrophedon (back-and-forth row sweep) pattern given enough time.
 - **Performance plateaus.** Average fitness has local maxima around 50%, 65%, and 80% of maximum possible coverage. The global average maximum observed is just over 90% maximum coverage, requiring large populations and many generations.
 - **Individuals outperform generational averages.** At least one high performer emerges early, but takes dozens or hundreds of generations to propagate genes and meaningfully raise generational average. 
-- **500 bots × 2000 generations** consistently achieves >700 average fitness and at least one near-perfect coverage bot, completing in ~5 seconds on release build.
+- **500 bots × 2000 generations** consistently achieves >90% average fitness and at least one near-perfect coverage bot, completing in ~5 seconds on release build.
 
 ## Configuration
 
@@ -64,7 +64,7 @@ All tunable parameters live in [Config.h](Config.h):
 
 | Parameter | Default | Notes |
 |---|---|---|
-| `MAP_SIZE` | 22 | Grid dimensions (includes border walls) |
+| `MAP_SIZE` | 52 | Grid dimensions (includes border walls) |
 | `GENE_COUNT` | 32 | Number of rules per robot |
 | `GENERATIONS` | 2000 | Number of evolutionary cycles |
 | `ROBOTS_PER_GEN` | 500 | Population size |
