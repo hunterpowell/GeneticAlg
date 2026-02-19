@@ -32,6 +32,8 @@ void Simulator::runSim() {
     std::ofstream AvgFile("averages.txt");
     std::ofstream BestFile("best.txt");
 
+    double progress = 0;
+
     for (int i = 0; i < Config::GENERATIONS; i++) {
         int localAvg = 0;
         // auto t1 = MyClock::now();
@@ -71,7 +73,25 @@ void Simulator::runSim() {
         AvgFile << i << " " << localAvg << "\n";
         BestFile << i << " " << roboArray[0].getFitness() << "\n";
         // std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
+
+        // this is an absolute mess but it prints a progress bar to console
+        if (i % 25 == 0) {
+            int width = 70;
+            
+            std::string bar = "[";
+            int pos = int(progress * width);
+            for (int j = 0; j < width - 2; j++) {
+                bar += (j < pos) ? '#' : '-';
+            }
+            bar += "] " + std::to_string(int(progress * 100) + 2) + " %";
+            
+            std::cout << "\r" << bar;
+            std::cout.flush();
+            
+            progress += .0125;
+        }
     }
+    std::cout << std::endl;
 
     // check best performer of each generation to find best overall performer
     if (roboArray[0].getFitness() >= bestBot.getFitness()) {
@@ -96,7 +116,7 @@ void Simulator::showBots() {
         genOneRando.movement(map, rng);
     }
 
-    std::cout << "Random selection from gen 1\n";
+    // std::cout << "Random selection from gen 1\n";
     map.display(randomBotMap);
     // std::cout << genOneRando;
 
@@ -107,7 +127,7 @@ void Simulator::showBots() {
     while (bestBot.getEnergy() > 0) {
         bestBot.movement(map, rng);
     }
-    std::cout << "Best overall performer\n";
+    // std::cout << "Best overall performer\n";
     map.display(bestBotMap);
     // std::cout << bestBot;
     // bestBot.displayGenes();

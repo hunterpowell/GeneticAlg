@@ -53,6 +53,7 @@ After the simulation, `graph.py` (matplotlib) displays a 2×2 dashboard:
 - **Mutation rate should be very low.** Around 0.05–0.1% per gene value seems optimal. Higher rates disrupt good solutions faster than selection can preserve them.
 - **Emergent sweep behavior.** The algorithm often independently evolves a boustrophedon (back-and-forth row sweep) pattern given enough time.
 - **Performance plateaus.** Average fitness has local maxima at 400, 500, and 650 depending on parameters. The global average maximum observed is ~730–755, requiring large populations and many generations.
+- **Individuals outperform generational averages.** At least one high performer emerges early, but takes dozens or hundreds of generations to propagate genes and meaningfully raise generational average. 
 - **500 bots × 2000 generations** consistently achieves >700 average fitness and at least one near-perfect coverage bot, completing in ~5 seconds on release build.
 
 ## Configuration

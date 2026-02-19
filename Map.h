@@ -24,27 +24,27 @@ public:
     void display(std::ostream& file) {
         for (int i = 0; i < Config::MAP_SIZE; i++) {
             for (int j = 0; j < Config::MAP_SIZE; j++) {
-                std::string out;
-                switch (grid[i][j]) {
-                    case 0:
-                        out = "O";
-                        break;
-                    case 1:
-                        out = "#";
-                        break;
-                    case 2:
-                        out = "W";
-                        break;
-                    case 3:
-                        out = ".";
-                        break;
-                    default:
-                        out = "R";
-                }
-                std::cout << out << " ";
+                // std::string out;
+                // switch (grid[i][j]) {
+                //     case 0:
+                //         out = "O";
+                //         break;
+                //     case 1:
+                //         out = "#";
+                //         break;
+                //     case 2:
+                //         out = "W";
+                //         break;
+                //     case 3:
+                //         out = ".";
+                //         break;
+                //     default:
+                //         out = "R";
+                // }
+                // std::cout << out << " ";
                 file << grid[i][j] << " ";
             }
-            std::cout << "\n";
+            // std::cout << "\n";
             file << "\n";
         }
     }
