@@ -2,7 +2,8 @@
 
 A C++ simulation that evolves robots to maximize grid coverage using a genetic algorithm. Robots navigate a walled, battery-scattered map and are rewarded for collecting batteries (i.e., covering cells). Over generations, the population evolves increasingly effective exploration strategies — sometimes independently converging on a lawnmower sweep pattern.
 
-<img width="1790" height="1489" alt="image" src="https://github.com/user-attachments/assets/e1cff7d5-670a-4ee2-b6a3-5666b92a8e95" />
+<img width="1790" height="1488" alt="image" src="https://github.com/user-attachments/assets/d098ea9c-c5db-47bd-8bab-b05685a1009f" />
+
 
 ## How It Works
 
