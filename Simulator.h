@@ -19,6 +19,7 @@ class Simulator {
         int topBots;
         Robot genOneRando;
         Robot bestBot;
+        std::array<int, 2> bestGenFitness;
         
         std::vector<std::mt19937> rngs;
         std::array<Robot, Config::ROBOTS_PER_GEN> nextGen;
@@ -26,13 +27,14 @@ class Simulator {
         void repopulate();
         Robot tournament(std::mt19937&);
         std::array<Robot, 2> crossover(const std::array<Robot, 2>&, std::mt19937&);
+        void evalBest();
         
     public:
 
         Simulator();
         
         void runSim();
-        void showBots();
+        void showBestGen();
 
         Robot getBestBot() {return bestBot;}
 };

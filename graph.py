@@ -34,11 +34,7 @@ def read_grid(filename: str) -> np.ndarray:
 
 
 def read_fitness_file(filename: str) -> tuple[list[int], list[int], Optional[int]]:
-    """Return (x_values, y_values, max_fitness_or_None).
 
-    If the file contains a header line starting with -1, the second value on
-    that line is treated as half of max_fitness (i.e. max_fitness = value * 2).
-    """
     x, y = [], []
     max_fitness = None
     with open(filename) as f:
@@ -77,10 +73,6 @@ def load_data(
     return data, cfg
 
 
-# ---------------------------------------------------------------------------
-# Styling helpers
-# ---------------------------------------------------------------------------
-
 def apply_dark_style(ax: plt.Axes) -> None:
     ax.set_facecolor("#16213e")
     ax.tick_params(colors="#cccccc")
@@ -98,10 +90,6 @@ def build_figure() -> tuple[plt.Figure, np.ndarray]:
         apply_dark_style(ax)
     return fig, axes
 
-
-# ---------------------------------------------------------------------------
-# Plot helpers
-# ---------------------------------------------------------------------------
 
 def plot_fitness(ax: plt.Axes, x: list, y: list, title: str, cfg: PlotConfig) -> None:
     ax.plot(x, y, color="xkcd:coral", lw=2)
@@ -150,7 +138,7 @@ def add_legend(fig: plt.Figure, cfg: PlotConfig) -> None:
         handles=legend_elements,
         loc="lower center",
         ncol=1,
-        bbox_to_anchor=(0.495, 0.25),
+        bbox_to_anchor=(0.5, 0.25),
     )
 
 def main() -> None:

@@ -24,7 +24,7 @@ class Config {
         static constexpr double TOP_PERCENT = 0.05;
         static constexpr int TOURNAMENT_SIZE = 10;
         // expressed as a %
-        static constexpr double MUTATION_RATE = 0.07;      // <1% seems optimal
+        static constexpr double MUTATION_RATE = 0.07;      // <0.1% seems optimal
 };
 
 #endif
