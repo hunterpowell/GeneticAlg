@@ -150,74 +150,74 @@ void Simulator::repopulate() {
         roboArray = nextGen;
     }
     
-    Robot Simulator::tournament(std::mt19937& localRng) {
-        
-        Robot best;
-        best.init(localRng);
-        
-        // random n robots, picks the best one
-        for (int i = 0; i < Config::TOURNAMENT_SIZE; i++) {
-            int x = (int)(dist(localRng) * Config::ROBOTS_PER_GEN);
-            if (roboArray[x].getFitness() > best.getFitness()) {
-                best = roboArray[x];
-            }
+Robot Simulator::tournament(std::mt19937& localRng) {
+    
+    Robot best;
+    best.init(localRng);
+    
+    // random n robots, picks the best one
+    for (int i = 0; i < Config::TOURNAMENT_SIZE; i++) {
+        int x = (int)(dist(localRng) * Config::ROBOTS_PER_GEN);
+        if (roboArray[x].getFitness() > best.getFitness()) {
+            best = roboArray[x];
         }
-        
-        return best;
     }
     
-    std::array<Robot, 2> Simulator::crossover(const std::array<Robot, 2>& parents, std::mt19937& localRng) {
-        std::array<Robot, 2> children;
-        children[0].init(localRng);
-        children[1].init(localRng);
-        
-        for (int i = 0; i < Config::GENE_COUNT; i++) {
-            if (dist(localRng) < 0.5) {
-                children[0].setGene(parents[0], i);
-                children[1].setGene(parents[1], i);
-            }
-            else {
-                children[0].setGene(parents[1], i);
-                children[1].setGene(parents[0], i);
-            }
-        }
-        return children;
-    }
-    
-    void Simulator::evalBest() {
-    
-        std::ofstream randomBotMap("rand_map.txt");
-        std::ofstream bestBotMap("best_map.txt");
-        
-        genOneRando.reset(rng);
-        generator.populateMap(map, rng);
-        map.setCell(genOneRando.getRow(), genOneRando.getCol(), Config::THE_GUY);
-    
-        while (genOneRando.getEnergy() > 0) {
-            genOneRando.movement(map, rng);
-        }
-    
-        // std::cout << "Random selection from gen 1\n";
-        map.writeToFile(randomBotMap);
-        // std::cout << genOneRando;
-    
-        bestBot.reset(rng);
-        generator.populateMap(map, rng);
-        map.setCell(bestBot.getRow(), bestBot.getCol(), Config::THE_GUY);
-    
-        while (bestBot.getEnergy() > 0) {
-            bestBot.movement(map, rng);
-        }
-        // std::cout << "Best overall performer\n";
-        map.writeToFile(bestBotMap);
-        // std::cout << bestBot;
-        // bestBot.displayGenes();
+    return best;
+}
 
+std::array<Robot, 2> Simulator::crossover(const std::array<Robot, 2>& parents, std::mt19937& localRng) {
+    std::array<Robot, 2> children;
+    children[0].init(localRng);
+    children[1].init(localRng);
+    
+    for (int i = 0; i < Config::GENE_COUNT; i++) {
+        if (dist(localRng) < 0.5) {
+            children[0].setGene(parents[0], i);
+            children[1].setGene(parents[1], i);
+        }
+        else {
+            children[0].setGene(parents[1], i);
+            children[1].setGene(parents[0], i);
+        }
+    }
+    return children;
+}
+
+void Simulator::evalBest() {
+
+    std::ofstream randomBotMap("rand_map.txt");
+    std::ofstream bestBotMap("best_map.txt");
+    
+    genOneRando.reset(rng);
+    generator.populateMap(map, rng);
+    map.setCell(genOneRando.getRow(), genOneRando.getCol(), Config::THE_GUY);
+
+    while (genOneRando.getEnergy() > 0) {
+        genOneRando.movement(map, rng);
     }
 
-    void Simulator::showBestGen() {
-        std::cout << "Best gen: " << bestGenFitness[0] << "\n";
-        std::cout << "Fitness: " << bestGenFitness[1] << "/" 
-                  << Config::TOTAL_CELLS * 2 << " ("
-                  << bestGenFitness[1]/(Config::TOTAL_CELLS*2) << "%)";
+    // std::cout << "Random selection from gen 1\n";
+    map.writeToFile(randomBotMap);
+    // std::cout << genOneRando;
+
+    bestBot.reset(rng);
+    generator.populateMap(map, rng);
+    map.setCell(bestBot.getRow(), bestBot.getCol(), Config::THE_GUY);
+
+    while (bestBot.getEnergy() > 0) {
+        bestBot.movement(map, rng);
     }
+    // std::cout << "Best overall performer\n";
+    map.writeToFile(bestBotMap);
+    // std::cout << bestBot;
+    // bestBot.displayGenes();
+
+}
+
+void Simulator::showBestGen() {
+    std::cout << "Best gen: " << bestGenFitness[0] << "\n";
+    std::cout << "Fitness: " << bestGenFitness[1] << "/" 
+                << Config::TOTAL_CELLS * 2 << " ("
+                << (float)bestGenFitness[1]/(Config::TOTAL_CELLS*2) * 100 << "%)";
+}
