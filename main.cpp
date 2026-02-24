@@ -10,13 +10,14 @@ int main() {
     
     auto sim = std::make_unique<Simulator>();
     sim->runSim();
-    sim->showBots();
-
+    
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     std::cout << "Time taken by sim: " << duration.count() << " milliseconds\n";
     
+    sim->showBestGen();
+    
     system("python graph.py");
-
+    
     return 0;
 }

@@ -5,7 +5,7 @@
 
 class Robot {
     private:
-        std::array<int, 8> surroundings;    // 0-7 -> n, ne, e, se, s, sw, w, nw
+        std::array<int, 4> surroundings;    // 0-4 -> n e s w
         std::array<int, 2> position;        // 0-1 -> row, col
         int energy;                         // current energy
         int fitness;                        // total energy
@@ -26,7 +26,7 @@ class Robot {
         void movement(Map&, std::mt19937&);
         void reset(std::mt19937&);
         
-        const std::array<int, 8>& getSurroundings() const {return surroundings;}
+        const std::array<int, 4>& getSurroundings() const {return surroundings;}
         int getEnergy() const {return energy;}
         int getFitness() const {return fitness;}
         int getTurnsAlive() const {return turnsAlive;}
@@ -41,5 +41,4 @@ class Robot {
         void displayGenes();
         
         friend std::ostream &operator << (std::ostream &output, const Robot &x);
-
 };
