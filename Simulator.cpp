@@ -116,39 +116,11 @@ void Simulator::runSim() {
     }
     std::cout << std::endl;
 
+    evalBest();
+
     // bestBot.displayGenes();
     AvgFile.close();
     BestFile.close();
-}
-
-void Simulator::evalBest() {
-
-    std::ofstream randomBotMap("rand_map.txt");
-    std::ofstream bestBotMap("best_map.txt");
-    
-    genOneRando.reset(rng);
-    generator.populateMap(map, rng);
-    map.setCell(genOneRando.getRow(), genOneRando.getCol(), Config::THE_GUY);
-
-    while (genOneRando.getEnergy() > 0) {
-        genOneRando.movement(map, rng);
-    }
-
-    // std::cout << "Random selection from gen 1\n";
-    map.writeToFile(randomBotMap);
-    // std::cout << genOneRando;
-
-    bestBot.reset(rng);
-    generator.populateMap(map, rng);
-    map.setCell(bestBot.getRow(), bestBot.getCol(), Config::THE_GUY);
-
-    while (bestBot.getEnergy() > 0) {
-        bestBot.movement(map, rng);
-    }
-    // std::cout << "Best overall performer\n";
-    map.write(bestBotMap);
-    // std::cout << bestBot;
-    // bestBot.displayGenes();
 }
 
 void Simulator::repopulate() {

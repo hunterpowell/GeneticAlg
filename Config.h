@@ -11,7 +11,7 @@ class Config {
         static constexpr int THE_GUY = 7;
 
         // map size
-        static constexpr int MAP_SIZE = 22;
+        static constexpr int MAP_SIZE = 52;
         static constexpr int TOTAL_CELLS = (MAP_SIZE-2) * (MAP_SIZE-2);     // -2 bc i don't want to turn the walls into batteries
         
         // robot numbers
@@ -24,7 +24,7 @@ class Config {
         static constexpr double TOP_PERCENT = 0.05;
         static constexpr int TOURNAMENT_SIZE = 10;
         // expressed as a %
-        static constexpr double MUTATION_RATE = 0.07;      // <1% seems optimal
+        static constexpr double MUTATION_RATE = 0.07;      // <0.1% seems optimal
 };
 
 #endif
