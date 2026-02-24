@@ -72,7 +72,7 @@ void Simulator::runSim() {
 
         AvgFile << i << " " << localAvg << "\n";
         BestFile << i << " " << roboArray[0].getFitness() << "\n";
-        // std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
+        std::cout << "Avg fitness of gen " << i+1 << ": " << localAvg << "\n";
 
         // this is an absolute mess but it prints a progress bar to console
         if (i % 25 == 0) {
@@ -130,7 +130,7 @@ void Simulator::showBots() {
     // std::cout << "Best overall performer\n";
     map.display(bestBotMap);
     // std::cout << bestBot;
-    // bestBot.displayGenes();
+    bestBot.displayGenes();
 }
 
 void Simulator::repopulate() {
